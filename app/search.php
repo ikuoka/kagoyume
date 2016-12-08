@@ -1,21 +1,32 @@
 <?php
+
 session_start();
 require_once '../common/defineUtil.php';
 require_once("../api/common/common.php");
 
+//フォームから受け取った値のチェック、セット
 $query = !empty($_GET["query"]) ? $_GET["query"] : "";
 $sort =  !empty($_GET["sort"]) && array_key_exists($_GET["sort"], YAHOO_API_DATA::$sortOrder) ? $_GET["sort"] : "-score";
 $category_id = ctype_digit($_GET["category_id"]) && array_key_exists($_GET["category_id"], YAHOO_API_DATA::$categories) ? $_GET["category_id"] : 1;
 
+// フォームから受け取った値をセッションに保存
+// 商品詳細ページから戻った時に検索画面を表示させるために使用
 $_SESSION['query'] = $query;
 $_SESSION['sort'] = $sort;
 $_SESSION['category_id'] = $category_id;
 
+//クエリが空じゃない場合
 if ($query != "") {
-  $hits = YAHOO_CONTROLLER::deliveryItemList($category_id, $query, $sort);
+  //受け取った値からxmlを取得
+  $xml = YAHOO_CONTROLLER::deliveryItemList($category_id, $query, $sort);
+  $hits = $xml->Result->Hit;
+  //検索キーワード、検索結果数を変数に格納
   $search_word = $_GET["query"];
-  $search_num = YAHOO_CONTROLLER::deliveryItemNum($category_id, $query, $sort);
+  $search_num = $xml["totalResultsReturned"];
+
+//クエリが空の場合
 }elseif($query == ""){
+  //検索キーワード、検索結果数を下記にセット
   $search_word = "検索キーワードを入力してください。";
   $search_num = 0;
 }
@@ -76,7 +87,7 @@ if ($query != "") {
           <!--/.nav-collapse -->
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php print htmlspecialchars($_SESSION['USERNAME'], ENT_QUOTES); ?>さん！</a></li>
+              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php print h($_SESSION['USERNAME']); ?>さん！</a></li>
               <li><a href="<?php echo LOGIN .'?mode=logout'; ?>" class="scroll">ログアウト</a></li>
               <li><a href="<?php echo CART ?>" class="scroll">カート <i class="glyphicon glyphicon-shopping-cart"></i></a></li>
             </ul>

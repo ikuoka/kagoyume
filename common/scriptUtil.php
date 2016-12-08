@@ -25,8 +25,8 @@ function return_top(){
 
 /**
  * フォームの再入力時に、すでにセッションに対応した値があるときはその値を返却する
- * @param type $name formのname属性
- * @return type セッションに入力されていた値
+ * @param string $name formのname属性
+ * @return string セッションに入力されていた値
  */
 function form_value($name){
     if(isset($_POST['mode']) && $_POST['mode']=='REINPUT'){
@@ -39,8 +39,8 @@ function form_value($name){
 /**
  * ポストからセッションに存在チェックしてから値を渡す。
  * 二回目以降のアクセス用に、ポストから値の上書きがされない該当セッションは初期化する
- * @param type $name
- * @return type
+ * @param string $name
+ * @return string ポストに格納した値
  */
 function bind_p2s($value){
   if(!empty($_POST[$value])){

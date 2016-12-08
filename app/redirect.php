@@ -1,43 +1,4 @@
-<?php
-
-require_once '../common/defineUtil.php';
-require_once '../common/scriptUtil.php';
-require_once '../common/dbaccessUtil.php';
-require_once '../api/common/common.php';
-session_start();
-
-//直リン禁止
-if(!isset($_SESSION['USERNAME']) || !isset($_POST['buy_comp'])){
-   echo '<meta http-equiv="refresh" content="0;URL='.REDIRECT.'">';
-   exit;
-}else{
-
-//buy_tに挿入するデータを変数に格納
-$totalPrice = intval($_POST['total_price']);
-$type = $_POST['delivery'];
-$username = $_SESSION['USERNAME'];
-$userID = return_userID($username);
-
-//商品コードを配列として格納
-//複数の商品がカートにある場合は複数分DBに挿入するため
-$itemCodeArray = array();
-for ($i = 0; $i < count($_SESSION['userItemInfo']); ++$i) {
-    $itemCodeArray[] = $_SESSION['userItemInfo'][$i][3];
-}
-
-//user_tの合計金額(total)にカートの金額を足す。
-total_price_add($userID, $totalPrice);
-
-//buy_tに購入情報を挿入
-//複数の商品がある場合はその数に応じて挿入が繰り返される
-foreach ($itemCodeArray as $itemCode) {
-  insert_items($userID, $itemCode, $type);
-}
-
-//カートを空にする
-$_SESSION['userItemInfo'] = array();
-
-?>
+<?php require_once '../common/defineUtil.php'; ?>
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -56,7 +17,6 @@ $_SESSION['userItemInfo'] = array();
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-
   <header>
     <nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
         <div class="container">
@@ -73,20 +33,19 @@ $_SESSION['userItemInfo'] = array();
           <!--/.nav-collapse -->
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php echo h($_SESSION['USERNAME']); ?>さん！</a></li>
-              <li><a href="<?php echo LOGIN.'?mode=logout'; ?>" class="scroll">ログアウト</a></li>
+              <li><a href="<?php echo LOGIN; ?>" class="scroll">ログイン</a></li>
+              <li><a href="<?php echo REGIST; ?>" class="scroll">会員登録</a></li>
               <li><a href="<?php echo CART ?>" class="scroll">カート <i class="glyphicon glyphicon-shopping-cart"></i></a></li>
             </ul>
           </div>
 
         </div>
       </nav>
-
   </header>
 
   <div class="container">
-    <h1>購入が完了しました。</h1>
-    <?php echo return_top(); ?>
+    <h1>不正なアクセス</h1>
+    <p>不正なアクセスです。トップページに戻ります。</p>
   </div>
 
   <footer class="footer">
@@ -95,6 +54,7 @@ $_SESSION['userItemInfo'] = array();
     </div>
   </footer>
 
+  <meta http-equiv="refresh" content="2;URL='<?php echo ROOT_URL; ?>'">
+
 </body>
 </html>
-<?php } ?>

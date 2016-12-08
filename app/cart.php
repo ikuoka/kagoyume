@@ -1,13 +1,15 @@
 <?php
 
 require_once '../common/defineUtil.php';
+require_once '../common/scriptUtil.php';
 require_once '../api/common/common.php';
 session_start();
 
 //合計金額の初期化
 $totalPrice = 0;
 
-//削除機能
+//削除ボタンが押されたらセッションに格納された商品情報を消去。
+//インデックスはPOSTで取得する
 if (isset($_POST['delete'])) {
     $num = intval($_POST['deleteItem']);
     if (isset($_SESSION['USERNAME'])) {
@@ -73,7 +75,7 @@ if (isset($_POST['delete'])) {
           <!--/.nav-collapse -->
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php echo htmlspecialchars($_SESSION['USERNAME'], ENT_QUOTES); ?>さん！</a></li>
+              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php echo h($_SESSION['USERNAME']); ?>さん！</a></li>
               <li><a href="<?php echo LOGIN.'?mode=logout'; ?>" class="scroll">ログアウト</a></li>
               <li><a href="<?php echo CART ?>" class="scroll">カート <i class="glyphicon glyphicon-shopping-cart"></i></a></li>
             </ul>
@@ -92,6 +94,7 @@ if (isset($_POST['delete'])) {
   </div>
 
     <?php
+    //ログインしていない場合
     if (!isset($_SESSION['USERNAME'])) {
         for ($i = 0; $i < count($_SESSION['itemInfo']); ++$i) {
             ?>
@@ -112,6 +115,7 @@ if (isset($_POST['delete'])) {
     <?php
     $totalPrice += $_SESSION['itemInfo'][$i][2];
         }
+    //ログインしている場合
     } elseif (isset($_SESSION['USERNAME'])) {
         for ($i = 0; $i < count($_SESSION['userItemInfo']); ++$i) {
             ?>
@@ -136,7 +140,6 @@ if (isset($_POST['delete'])) {
 
   <hr>
   <div class="container">
-    <div class="">
       <p>合計金額：<?php echo $totalPrice; ?>円</p>
       <?php if (isset($_SESSION['USERNAME']) && !empty($_SESSION['userItemInfo'])) {
       ?>
@@ -149,7 +152,7 @@ if (isset($_POST['delete'])) {
         <p><a href="<?php echo LOGIN ?>">ログインして購入する</a></p>
       <?php
   } ?>
-    </div>
+  <?php echo return_top(); ?>
   </div>
 
   <footer class="footer">

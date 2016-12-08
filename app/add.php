@@ -4,29 +4,49 @@ require_once '../common/defineUtil.php';
 require_once("../api/common/common.php");
 session_start();
 
-$sort = $_SESSION['sort'];
-$query = $_SESSION['query'];
-$category_id = $_SESSION['category_id'];
+//直リン禁止
+if(!isset($_POST['itemcode'])){
+   echo '<meta http-equiv="refresh" content="0;URL='.REDIRECT.'">';
+   exit;
 
-$hits = YAHOO_CONTROLLER::deliveryItemList($category_id, $query, $sort);
-foreach ($hits as $hit){
-  if(h($hit->Code) === $_POST['itemcode']){
-    $hits = $hit;
-  }
-}
+}else{
 
-$_SESSION[h($hits->Code)] = array(h($hits->Image->Medium), h($hits->Name), h($hits->Price), h($hits->Code));
-$itemInfo = $_SESSION[h($hits->Code)];
+$itemcode = $_POST['itemcode'];
+$xml = YAHOO_CONTROLLER::getItemDetail($itemcode);
+$hits = $xml->Result->Hit;
 
+$_SESSION[$itemcode] = array(h($hits->Image->Medium), h($hits->Name), h($hits->Price), $itemcode);
+$itemInfo = $_SESSION[$itemcode];
+
+/* --------------------------------
+
+  セッションにカートで表示させる
+  商品情報を格納
+
+  >>ログインしていない場合
+    $_SESSION['itemInfo']に
+  >>ログインしている場合
+    $_SESSION['userItemInfo']に
+
+  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+-------------------------------- */
+
+//ログインしていない場合
 if (!isset($_SESSION['USERNAME'])){
 
+  //商品情報がすでにある場合
   if(isset($_SESSION['itemInfo'])){
+    //セッションに$itemInfoを格納 = 2次元配列
     $_SESSION['itemInfo'][] = $itemInfo;
+
+  //商品情報がない場合は初期化してから格納
   }else {
     $_SESSION['itemInfo'] = array();
     $_SESSION['itemInfo'][] = $itemInfo;
   }
 
+//ログインしている場合
 }else if(isset($_SESSION['USERNAME'])){
 
   if(isset($_SESSION['userItemInfo'])){
@@ -93,7 +113,7 @@ if (!isset($_SESSION['USERNAME'])){
           <!--/.nav-collapse -->
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php print htmlspecialchars($_SESSION['USERNAME'], ENT_QUOTES); ?>さん！</a></li>
+              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php print h($_SESSION['USERNAME']); ?>さん！</a></li>
               <li><a href="<?php echo LOGIN .'?mode=logout'; ?>" class="scroll">ログアウト</a></li>
               <li><a href="<?php echo CART ?>" class="scroll">カート <i class="glyphicon glyphicon-shopping-cart"></i></a></li>
             </ul>
@@ -128,8 +148,9 @@ if (!isset($_SESSION['USERNAME'])){
     </div>
   </footer>
 
-  <!-- 2秒後にカートに移動する -->
-  <meta http-equiv="refresh" content="2;URL='<?php echo CART;?>'">
+  <!-- 1秒後にカートに移動する -->
+  <meta http-equiv="refresh" content="1;URL='<?php echo CART;?>'">
 
 </body>
 </html>
+<?php } ?>

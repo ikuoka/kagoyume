@@ -1,15 +1,35 @@
 <?php
 
+/** @mainpage
+ *  DB関連関数
+ */
+
+/**
+ * @file
+ * @brief DB関連関数
+ *
+ * DB関連で使用する設定・関数を集めたファイルです。
+ *
+ * PHP version 5
+ *
+ */
+
 //タイムゾーンを東京に設定。
 date_default_timezone_set('Asia/Tokyo');
 
 /* -------------------------------------------------------------------
 
-  DB接続
+  接続
 
 ------------------------------------------------------------------- */
 
-//DBへの接続を行う。成功ならPDOオブジェクトを、失敗なら中断、メッセージの表示を行う
+/**
+ * @brief DBへの接続を行う。成功ならPDOオブジェクトを、失敗なら中断、メッセージの表示を行う
+ *
+ * @param null
+ * @return pdoクラス セッションに入力されていた値
+ */
+
 function connect2MySQL()
 {
     try {
@@ -28,8 +48,17 @@ function connect2MySQL()
 
 ------------------------------------------------------------------- */
 
+/**
+ * @brief テーブル「user_t」にレコードの挿入を行う。失敗した場合はエラー文を返却する
+ *
+ * @param string $username ユーザー名
+ * @param string $password パスワード
+ * @param string $mail メールアドレス
+ * @param string $address 住所
+ * @return null エラーが起きた場合はエラー文(string)を返す
+ *
+ */
 
-//レコードの挿入を行う。失敗した場合はエラー文を返却する
 function insert_users($username, $password, $mail, $address)
 {
     //db接続を確立
@@ -60,6 +89,18 @@ function insert_users($username, $password, $mail, $address)
     return null;
 }
 
+
+/**
+ * @brief テーブル「user_t」のレコードの更新を行う。失敗した場合はエラー文を返却する
+ *
+ * @param int $userID ユーザーID
+ * @param string $username ユーザー名
+ * @param string $password パスワード
+ * @param string $mail メールアドレス
+ * @param string $address 住所
+ * @return null エラーが起きた場合はエラー文(string)を返す
+ *
+ */
 
 function update_users($userID, $username, $password, $mail, $address)
 {
@@ -92,6 +133,15 @@ function update_users($userID, $username, $password, $mail, $address)
     return null;
 }
 
+/**
+ * @brief テーブル「user_t」内で検索を行う。失敗した場合はエラー文を返却する
+ *
+ * @param string $username ユーザー名
+ * @return array ユーザー情報を連想配列で返す
+ * @return string エラーが起きた場合はエラー文を返す
+ *
+ */
+
 function search_users($username){
 
   $search_db = connect2MySQL();
@@ -110,6 +160,16 @@ function search_users($username){
   return $search_query->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+/**
+ * @brief $usernameを用いてuserIDを返す
+ *
+ * @param string $username ユーザー名
+ * @return int ユーザーID
+ * @return string エラーが起きた場合はエラー文を返す
+ *
+ */
+
 function return_userID($username){
 
   $return_userID_db = connect2MySQL();
@@ -126,6 +186,14 @@ function return_userID($username){
   return $return_userID_query->fetchColumn();
 }
 
+/**
+ * @brief deleteFlgを0から1に更新する
+ *
+ * @param int $userID ユーザーID
+ * @return null
+ * @return string エラーが起きた場合はエラー文を返す
+ *
+ */
 
 function delete_user($userID){
   $delete_user_db = connect2MySQL();
@@ -149,6 +217,15 @@ function delete_user($userID){
 
 ------------------------------------------------------------------- */
 
+/**
+ * @brief 購入金額を今までの合計金額(total)に足す
+ *
+ * @param string $username ユーザー名
+ * @param int $totalPrice 合計金額
+ * @return null
+ * @return string エラーが起きた場合はエラー文を返す
+ *
+ */
 
 function total_price_add($userID, $totalPrice){
 
@@ -164,7 +241,20 @@ function total_price_add($userID, $totalPrice){
       $totalPrice_db = null;
       return $e->getMessage();
   }
+  $totalPrice_db = null;
+  return null;
 }
+
+/**
+ * @brief 購入情報をテーブル「buy_t」に挿入する
+ *
+ * @param int $userID ユーザーID
+ * @param string $itemCode 商品コード
+ * @param int $type 発送方法
+ * @return null
+ * @return string エラーが起きた場合はエラー文を返す
+ *
+ */
 
 function insert_items($userID, $itemCode, $type){
 
@@ -187,6 +277,15 @@ function insert_items($userID, $itemCode, $type){
   $insert_items_db = null;
   return null;
 }
+
+/**
+ * @brief テーブル「buy_t」内で検索をする
+ *
+ * @param int $userID ユーザーID
+ * @return array 検索結果を連想配列で返す
+ * @return string エラーが起きた場合はエラー文を返す
+ *
+ */
 
 function search_items($userID){
 

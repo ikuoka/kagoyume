@@ -20,3 +20,4 @@ const CART          = 'cart.php'; //買い物かごページ
 const BUY_CONF      = 'buy_confirm.php'; //購入確認ページ
 const BUY_COMP      = 'buy_complete.php'; //購入完了ページ
 const ADD           = 'add.php'; //商品追加ページ
+const REDIRECT      = 'redirect.php'; //商品追加ページ

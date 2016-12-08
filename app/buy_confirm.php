@@ -4,6 +4,13 @@ require_once '../common/defineUtil.php';
 require_once '../api/common/common.php';
 session_start();
 
+//直リン禁止
+if(!isset($_SESSION['USERNAME']) || !isset($_POST['buy_conf'])){
+   echo '<meta http-equiv="refresh" content="0;URL='.REDIRECT.'">';
+   exit;
+
+}else{
+
 //合計金額の初期化
 $totalPrice = 0;
 
@@ -26,7 +33,6 @@ $totalPrice = 0;
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-
   <header>
     <nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
         <div class="container">
@@ -93,3 +99,4 @@ $totalPrice = 0;
 
 </body>
 </html>
+<?php } ?>

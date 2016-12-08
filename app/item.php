@@ -4,17 +4,16 @@ require_once '../common/defineUtil.php';
 require_once("../api/common/common.php");
 session_start();
 
+// フォームから受け取った値をセッションに保存
+// 商品詳細ページから戻った時に検索画面を表示させるために使用
 $sort = $_SESSION['sort'];
 $query = $_SESSION['query'];
 $category_id = $_SESSION['category_id'];
 
-$hits = YAHOO_CONTROLLER::deliveryItemList($category_id, $query, $sort);
-foreach ($hits as $hit){
-  if(h($hit->Code) === $_GET['itemcode']){
-    $hits = $hit;
-  }
-}
-
+//GETしたitemcodeで商品のxmlを取得
+$itemcode = $_GET['itemcode'];
+$xml = YAHOO_CONTROLLER::getItemDetail($itemcode);
+$hits = $xml->Result->Hit;
 
 ?>
 
@@ -72,7 +71,7 @@ foreach ($hits as $hit){
           <!--/.nav-collapse -->
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php print htmlspecialchars($_SESSION['USERNAME'], ENT_QUOTES); ?>さん！</a></li>
+              <li><a href="<?php echo MYDATE; ?>" class="scroll">ようこそ<?php print h($_SESSION['USERNAME']); ?>さん！</a></li>
               <li><a href="<?php echo LOGIN .'?mode=logout'; ?>" class="scroll">ログアウト</a></li>
               <li><a href="<?php echo CART ?>" class="scroll">カート <i class="glyphicon glyphicon-shopping-cart"></i></a></li>
             </ul>
@@ -87,6 +86,7 @@ foreach ($hits as $hit){
 
   <div class="itemDetail">
   <div class="container">
+    <div class="row">
     <div class="itemDetailImg col-sm-4">
       <img src="<?php echo $hits->Image->Medium; ?>" alt="商品画像" />
     </div>
@@ -99,10 +99,11 @@ foreach ($hits as $hit){
     </p>
     <form action="<? echo ADD; ?>" method="POST">
       <button name="add">カートに入れる</button>
-      <input type="hidden" name="itemcode" value="<?php echo h($hits->Code); ?>">
+      <input type="hidden" name="itemcode" value="<?php echo $itemcode; ?>">
     </form>
     <a href="<?php echo SEARCH. '?query=' .$query. '&sort=' .$sort. '&category_id=' .$category_id; ?>">検索結果に戻る</a>
     </div>
+  </div>
   </div>
   </div>
 

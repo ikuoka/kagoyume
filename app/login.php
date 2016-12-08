@@ -4,59 +4,68 @@ require_once '../common/defineUtil.php';
 require_once '../common/dbaccessUtil.php';
 require_once '../common/scriptUtil.php';
 
-if($_GET['mode'] == 'logout'){
-  $_SESSION = array();
-  if (isset($_COOKIE["PHPSESSID"])) {
-    setcookie("PHPSESSID", '', time() - 1800, '/');
-  }
-  session_destroy();
+//ログアウト処理
+if ($_GET['mode'] == 'logout') {
+    $_SESSION = array();
+    if (isset($_COOKIE['PHPSESSID'])) {
+        setcookie('PHPSESSID', '', time() - 1800, '/');
+    }
+    session_destroy();
 }
 
 session_start();
 
 //エラーメッセージの初期化
-$errorMessage = "";
+$errorMessage = '';
 
 //ログインボタンが押されたとき
-if(isset($_POST['login'])){
+if (isset($_POST['login'])) {
 
   //ユーザー名、パスワードチェック
-  if(empty($_POST['username']) && empty($_POST["password"])){
-    $errorMessage = "ユーザー名、パスワードが未入力です。";
-  }else if (empty($_POST["username"])) {
-    $errorMessage = "ユーザー名が未入力です。";
-  }else if (empty($_POST["password"])){
-    $errorMessage = "パスワードが未入力です。";
+  if (empty($_POST['username']) && empty($_POST['password'])) {
+      $errorMessage = 'ユーザー名、パスワードが未入力です。';
+  } elseif (empty($_POST['username'])) {
+      $errorMessage = 'ユーザー名が未入力です。';
+  } elseif (empty($_POST['password'])) {
+      $errorMessage = 'パスワードが未入力です。';
   }
 
   //ユーザー名、パスワードともに入力されている場合
-  if (!empty($_POST["username"]) && !empty($_POST["password"])) {
-    $userdata = search_users($_POST['username']);
-    foreach ($userdata as $stmt => $row) {
-      if($row['deleteFlg'] == 1){
-        $errorMessage = "ユーザーが存在しません。";
-      }else{
-      $pass = $row['password'];
-      if ($_POST["password"] === $pass) {
-        session_regenerate_id(true);
-        $_SESSION["USERNAME"] = $_POST["username"];
-        if(isset($_SESSION['itemInfo'])){
-          $_SESSION['userItemInfo'] = array();
-          $_SESSION['userItemInfo'] = $_SESSION['itemInfo'];
-        }
-        echo '<meta http-equiv="refresh" content="0;URL=' .ROOT_URL. '">';
-        exit;
-      }else {
-        // 認証失敗
-        $errorMessage = "ユーザIDあるいはパスワードに誤りがあります。";
+  if (!empty($_POST['username']) && !empty($_POST['password'])) {
+      $userdata = search_users($_POST['username']);
+    //ユーザー情報が見つからなかった場合
+    if ($userdata == array()) {
+        $errorMessage = 'ユーザーが存在しません。';
+    }
+      foreach ($userdata as $stmt => $row) {
+      //ユーザーが削除済みだった場合
+      if ($row['deleteFlg'] == 1) {
+          $errorMessage = 'ユーザーは削除されています。';
+      //ユーザーが見つかった場合
+      } else {
+          $pass = $row['password'];
+          if ($_POST['password'] === $pass) {
+              session_regenerate_id(true);
+              $_SESSION['USERNAME'] = $_POST['username'];
+              if (isset($_SESSION['itemInfo'])) {
+                  $_SESSION['userItemInfo'] = array();
+                  $_SESSION['userItemInfo'] = $_SESSION['itemInfo'];
+              }
+              // echo '<meta http-equiv="refresh" content="0;URL='.$previous_url.'">';
+              //遷移してきたページを格納
+              $previous_url = $_SERVER['HTTP_REFERER'];
+              header("Location: ".$previous_url, true, 303);
+              exit;
+          } else {
+              // 認証失敗
+        $errorMessage = 'ユーザIDあるいはパスワードに誤りがあります。';
+          }
       }
       }
-    };
-
-  }else {
-    // 未入力なら何もしない
+  } else {
+      // 未入力なら何もしない
   }
-  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -104,7 +113,7 @@ if(isset($_POST['login'])){
 
   <div class="container">
     <h1>ログイン画面</h1>
-    <?php echo $errorMessage. '<br>'; ?>
+    <?php echo $errorMessage.'<br>'; ?>
     <form action="" method="POST">
         <div class="form-group">
             <label>ユーザー名</label>

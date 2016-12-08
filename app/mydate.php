@@ -1,6 +1,7 @@
 <?php
 
 require_once '../common/defineUtil.php';
+require_once '../common/scriptUtil.php';
 require_once '../common/dbaccessUtil.php';
 require_once '../api/common/common.php';
 session_start();
@@ -75,6 +76,7 @@ $userInfo = search_users($username);
       <a href="<?php echo MY_UPDATE; ?>">更新</a><br>
       <a href="<?php echo MY_DELETE; ?>">削除</a>
     </p>
+    <?php echo return_top(); ?>
   </div>
 
   <footer class="footer">

@@ -152,17 +152,10 @@ class YAHOO_CONTROLLER
     $xml = $yahooModel->setItemListXML($category_id, $query, $sort)
                       ->getItemlListXML();
     if ($xml["totalResultsReturned"] != 0) { //検索件数が0件でない場合
-      return $xml->Result->Hit;
+      return $xml;
     } else {
       return null;
     }
-  }
-
-  public static function deliveryItemNum($category_id, $query, $sort){
-    $yahooModel = new YAHOO_MODEL();
-    $xml = $yahooModel->setItemListXML($category_id, $query, $sort)
-                      ->getItemlListXML();
-    return $xml["totalResultsReturned"];
   }
 
   public static function getItemDetail($itemcode)
@@ -171,17 +164,6 @@ class YAHOO_CONTROLLER
     $xml = $yahooModel->setItemDetailXML($itemcode)
                       ->getItemDetailXML();
     return $xml;
-
-    // [ // 各行右オペランドの構造は，YahooAPIヘルプ等を見てください
-    //         'Name'      => $xml->Result->Hit->Name,
-    //         'Headline'  => $xml->Result->Hit->Headline,
-    //         'Caption'   => $xml->Result->Hit->Caption,
-    //         'Count'     => $xml->Result->Hit->Review->Count,
-    //         'Rate'      => $xml->Result->Hit->Review->Rate,
-    //         'Price'     => $xml->Result->Hit->Price,
-    //         'Image'     => $xml->Result->Hit->Image->Medium,
-    //         'SmallImage'=> $xml->Result->Hit->Image->Small,
-    //         ];
   }
 
 }
