@@ -1,0 +1,299 @@
+
+
+
+/* --------------------
+
+  commmon
+
+ -------------------- */
+
+body{
+	font-family: 'Raleway', sans-serif, 'メイリオ', 'Hiragino Kaku Gothic Pro';
+	line-height: 1.8;
+}
+
+.font_color_white{
+  color: #fff;
+}
+
+/* --------------------
+
+  hover.css
+
+ -------------------- */
+
+.hvr-float {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px transparent;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvr-float:hover, .hvr-float:focus, .hvr-float:active {
+  -webkit-transform: translateY(-8px);
+  transform: translateY(-8px);
+}
+
+/* --------------------
+
+  navbar
+
+ -------------------- */
+
+.navbar-brand {
+  background: url("../assets/logo.png") no-repeat left center;
+  background-size: contain;
+  height: 50px;
+  width: 255px;
+}
+
+/* --------------------
+
+  header
+
+ -------------------- */
+
+header{
+  padding-bottom: 50px;
+}
+
+/* --------------------
+
+  top_contents
+
+-------------------- */
+
+ .jumbotron {
+   background:url(../assets/top_bgImg.jpg) center no-repeat;
+   background-size: cover;
+   background-attachment: fixed;
+   color: #fff;
+   padding: 0;
+   margin: 0;
+   text-shadow: 1px 1px 3px #555;
+ }
+
+.jumbotron .container{
+  padding-top: 180px;
+  padding-bottom: 180px;
+  text-align: left;
+}
+
+.jumbotron h1{
+  font-size:40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.jumbotron p{
+  font-size: 15px;
+}
+
+.jumbotron a{
+  font-size: 15px;
+}
+
+.bgImgEffect{
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+/* --------------------
+
+  about
+
+ -------------------- */
+
+.about{
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.about .container{
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+
+.about h2{
+  font-size: 30px;
+  margin-bottom: 40px;
+}
+
+.about img{
+  width: 300px;
+  height: 300px;
+}
+
+
+
+/* --------------------
+
+  search(top)
+
+ -------------------- */
+
+.searchContents{
+  background:url(../assets/searchBgImg.jpg) center no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  text-shadow: 1px 1px 3px #555;
+}
+
+.searchContents .container{
+  padding-top: 180px;
+  padding-bottom: 180px;
+  text-align: center;
+}
+
+.searchContents h1{
+  font-size:40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.searchContents p{
+  font-size: 15px;
+}
+
+.Search select, .Search input{
+  margin: 16px;
+  width: 300px;
+}
+
+/* --------------------
+
+  search
+
+ -------------------- */
+
+ .SearchResult{
+	 padding-top: 40px;
+	 padding-bottom: 80px;
+ }
+
+ .SearchResult p{
+   margin: 0;
+ }
+
+ div.Item{
+     border-bottom: solid 1px #808080;
+     width:100%;
+     margin: 0 auto;
+     height:220px;
+ }
+
+
+ div.Item h2{
+     font-size:18px;
+     text-align:left;
+ }
+
+ div.Item img{
+     border: none;
+     float: left;
+     clear: both;
+     margin: 5px;
+ }
+
+ div.Item p{
+     height: 146px;
+
+     line-height:120%;
+     font-size:90%;
+     overflow:hidden;
+     color:#808080;
+
+ }
+
+ div.Item p.Price{
+     padding-top:5px;
+     padding-bottom:5px;
+     font-size:smaller;
+     color:#990000;
+     font-weight:bolder;
+ }
+
+
+
+ /* --------------------
+
+   item
+
+  -------------------- */
+
+.itemDetail{
+	padding-top: 60px;
+	padding-bottom: 80px;
+}
+
+.itemDetail .container{
+	margin: 0;
+}
+
+.itemDetailImg{
+	text-align: center;
+	margin-top: 20px;
+}
+
+.itemDetailImg img{
+	width: 220px;
+}
+
+
+/* --------------------
+
+  footer
+
+ -------------------- */
+
+
+/* footer固定 */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {  /*<footer class="footer">*/
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+.footer > .container{
+  line-height: 60px;
+  text-align: center;
+}
+
+.footer p{
+  font-size: 14px;
+  margin: 0;
+}
+
+@media(max-width: 568px){
+  .footer{
+    height: 40px;
+  }
+  .footer > .container{
+    line-height: 40px;
+  }
+  .footer p{
+    font-size: 12px;
+  }
+}
+
+.footer_font{
+  color: #777;
+}
